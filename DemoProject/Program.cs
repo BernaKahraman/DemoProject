@@ -10,7 +10,7 @@ namespace DemoProject
     {
         static void Main(string[] args)
         {
-            CustomerManager customerManager = new CustomerManager(new NhCustomerDal());
+            CustomerManager customerManager = new CustomerManager(new NhCustomerDal(), new EmailLogger());
             customerManager.Save(new Customer());
             Console.ReadLine();
 
@@ -40,11 +40,13 @@ namespace DemoProject
 
     class CustomerManager : ICustomerService
     {
-        public ICustomerDal _customerDal;
+        private ICustomerDal _customerDal;
+        private ILogger _logger;
 
-        public CustomerManager(ICustomerDal customerDal)
+        public CustomerManager(ICustomerDal customerDal, ILogger logger)
         {
             _customerDal = customerDal;
+            _logger = logger;
         }
 
         public void Save(Customer customer)
@@ -53,8 +55,7 @@ namespace DemoProject
             /*CustomerDal customerDal = new CustomerDal();*/  //bir sınıf başka bir sınıfı yani bağımlı olduğu başka bir sınıfı newleyemez!
             //customerDal.Save();
             _customerDal.Save();
-            Logger logger = new Logger();
-            logger.Log(LoggerType.Database);
+            _logger.Log();
         }
     }
 
@@ -71,24 +72,22 @@ namespace DemoProject
     interface IEntity
     {
     }
-
-    class Logger
+    interface ILogger
     {
-        public void Log(LoggerType loggerType)
+        void Log();
+    }
+    class DatabaseLogger : ILogger
+    {
+        public void Log()
         {
-            if (loggerType == LoggerType.Database)
-            {
-                Console.WriteLine("logged to db");
-            }
-            else if(loggerType == LoggerType.File)
-            {
-                Console.WriteLine("logged to file");
-            }
+            Console.WriteLine("logged to db");
         }
     }
-
-    enum LoggerType
+    class EmailLogger : ILogger
     {
-        Database, File
+        public void Log()
+        {
+            Console.WriteLine("logged to email");
+        }
     }
 }
