@@ -10,7 +10,7 @@ namespace DemoProject
     {
         static void Main(string[] args)
         {
-            CustomerManager customerManager = new CustomerManager(new NhCustomerDal(), new EmailLogger());
+            CustomerManager customerManager = new CustomerManager(new NhCustomerDal(), new MainLoggerAdapter());
             customerManager.Save(new Customer());
             Console.ReadLine();
 
@@ -88,6 +88,25 @@ namespace DemoProject
         public void Log()
         {
             Console.WriteLine("logged to email");
+        }
+    }
+
+    
+    class MainLoggerAdapter : ILogger
+    {
+        public void Log()
+        {
+            MainLogger mainLogger = new MainLogger();
+            mainLogger.LogToMain();
+        }
+    }
+
+    //microservice
+    class MainLogger
+    {
+        public void LogToMain()
+        {
+            Console.WriteLine("logged to main");
         }
     }
 }
