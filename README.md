@@ -1,2 +1,1 @@
-Kurumsal Yazılım Geliştirme Teknikleri
-Engin Demiroğ
+Kurumsal Yazılım Geliştirme Teknikleri - Engin Demiroğ
